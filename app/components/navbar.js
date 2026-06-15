@@ -1,8 +1,6 @@
 "use client";
 
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import Modal from "./Modal";
 
 export default function Navbar() {
   const searchParams = useSearchParams();
