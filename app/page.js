@@ -9,6 +9,7 @@ export default async function Home() {
       headers: {
         AccountKey: process.env.API_KEY,
       },
+      cache: "no-store",
     },
   );
 
