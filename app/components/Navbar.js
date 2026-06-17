@@ -4,7 +4,7 @@ export default function Navbar() {
   return (
     <>
       <div className="navbar">
-        <div className="flex items-center bg-white rounded-full grow p-5">
+        <div className="flex items-center pt-4 px-6">
           <div>
             <svg
               width="26px"
