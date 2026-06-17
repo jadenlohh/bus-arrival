@@ -12,6 +12,7 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${inter.className} h-full antialiased`}
     >
+      <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"></meta>
       <body>{children}</body>
     </html>
   );
