@@ -6,15 +6,11 @@ import Footer from "./components/Footer";
 import NextArrivalTiming from "./components/NextArrivalTiming";
 import SearchBar from "./components/SearchBar";
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
 
 const fetcher = (url) => fetch(url).then((response) => response.json());
 
 export default function Home() {
-  const searchParams = useSearchParams();
-  const [busStopCode, setBusStopCode] = useState(
-    searchParams.get("busStop") || "53009",
-  );
+  const [busStopCode, setBusStopCode] = useState("53009");
 
   const {
     data: busArrivalData,
