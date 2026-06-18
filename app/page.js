@@ -30,7 +30,7 @@ export default function Home() {
         <div className="bg-white rounded-3xl shadow pb-5 ps-6 pe-8 pt-0 mt-5">
           {isLoading ? (
             <div className="my-auto w-full py-30">
-              <div className="flex w-full place-content-center">
+              <div className="flex place-content-center w-full">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="26"
@@ -41,6 +41,12 @@ export default function Home() {
                 >
                   <path d="M232,128a104,104,0,0,1-208,0c0-41,23.81-78.36,60.66-95.27a8,8,0,0,1,6.68,14.54C60.15,61.59,40,93.27,40,128a88,88,0,0,0,176,0c0-34.73-20.15-66.41-51.34-80.73a8,8,0,0,1,6.68-14.54C208.19,49.64,232,87,232,128Z"></path>
                 </svg>
+              </div>
+            </div>
+          ) : busArrivalData.length === 0 ? (
+            <div className="my-auto w-full py-30">
+              <div className="flex place-content-center text-sm w-full">
+                <p>No bus stop found</p>
               </div>
             </div>
           ) : (
