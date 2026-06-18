@@ -13,7 +13,7 @@ export async function GET(request) {
   const busStopName = await data.json();
 
   try {
-    return Response.json({name: busStopName.value[0].Description});
+    return Response.json({name: busStopName.value[0].Description, roadName: busStopName.value[0].RoadName});
   } catch (error) {
     return "N/A";
   }

@@ -6,18 +6,24 @@ import Footer from "./components/Footer";
 import NextArrivalTiming from "./components/NextArrivalTiming";
 import SearchBar from "./components/SearchBar";
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
 
 const fetcher = (url) => fetch(url).then((response) => response.json());
 
 export default function Home() {
-  const [busStopCode, setBusStopCode] = useState("75009");  
+  const [busStopCode, setBusStopCode] = useState("75009");
 
   const {
     data: busArrivalData,
     error,
     isLoading,
+    isValidating,
+    mutate,
   } = useSWR(`/api/getBusArrival?busStopCode=${busStopCode}`, fetcher);
+
+  const { data: busStopInfo, isLoading: busStopInfoLoading } = useSWR(
+    `/api/getBusStopInfo?busStopCode=${busStopCode}`,
+    fetcher,
+  );
 
   if (error) return <div>An error occured</div>;
 
@@ -27,8 +33,59 @@ export default function Home() {
 
       <SearchBar initialValue={busStopCode} onSearch={setBusStopCode} />
 
-      <div className="bus-arrival-timings">
-        <div className="bg-white rounded-3xl shadow pb-5 ps-6 pe-8 pt-0 mt-5">
+      <div className="bus-arrival-timings bg-white shadow rounded-3xl mt-5">
+        <div>
+          {!busStopInfoLoading && (
+            <div className="flex items-center justify-between border-b border-b-[#E6E6E6] w-full px-6 py-5">
+              <div>
+                <p className="font-semibold">{busStopInfo.name}</p>
+                <p className="text-xs text-grey pt-0.5">
+                  {busStopCode} | {busStopInfo.roadName}
+                </p>
+              </div>
+
+              <button
+                className={
+                  isValidating
+                    ? "cursor-pointer p-2"
+                    : "cursor-pointer transition-transform rotate-360 duration-1000 p-2"
+                }
+                onClick={() => {
+                  mutate();
+                }}
+              >
+                <svg
+                  width="18px"
+                  height="18px"
+                  strokeWidth="1.5"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  color="#171717"
+                >
+                  <path
+                    d="M21.1679 8C19.6247 4.46819 16.1006 2 11.9999 2C6.81459 2 2.55104 5.94668 2.04932 11"
+                    stroke="#171717"
+                  ></path>
+                  <path
+                    d="M17 8H21.4C21.7314 8 22 7.73137 22 7.4V3"
+                    stroke="#171717"
+                  ></path>
+                  <path
+                    d="M2.88146 16C4.42458 19.5318 7.94874 22 12.0494 22C17.2347 22 21.4983 18.0533 22 13"
+                    stroke="#171717"
+                  ></path>
+                  <path
+                    d="M7.04932 16H2.64932C2.31795 16 2.04932 16.2686 2.04932 16.6V21"
+                    stroke="#171717"
+                  ></path>
+                </svg>
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className="pb-5 ps-6 pe-8">
           {isLoading ? (
             <div className="my-auto w-full py-30">
               <div className="flex place-content-center w-full">
