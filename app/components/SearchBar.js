@@ -1,6 +1,10 @@
 "use client";
 
-export default function SearchBar({ onSearch }) {
+import { useState } from "react";
+
+export default function SearchBar({ initialValue }) {
+  const [value, setValue] = useState(initialValue);
+
   return (
     <div className="search-bar">
       <div className="flex items-center text-sm bg-white rounded-full shadow grow px-6 py-4.5 mt-5 lg:mt-6">
@@ -18,8 +22,11 @@ export default function SearchBar({ onSearch }) {
           type="text"
           placeholder="Search Bus Stop"
           className="w-full ms-2.5 focus:outline-none placeholder:text-grey"
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
           onKeyUp={(e) => {
-            e.key === "Enter" && onSearch(e.target.value);
+            e.key === "Enter" &&
+              window.location.assign(`/?busStop=${e.target.value}`);
           }}
         />
       </div>

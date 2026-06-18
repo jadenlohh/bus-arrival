@@ -6,11 +6,15 @@ import Footer from "./components/Footer";
 import NextArrivalTiming from "./components/NextArrivalTiming";
 import SearchBar from "./components/SearchBar";
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 const fetcher = (url) => fetch(url).then((response) => response.json());
 
 export default function Home() {
-  const [busStopCode, setBusStopCode] = useState("53009");
+  const searchParams = useSearchParams();
+  const [busStopCode, setBusStopCode] = useState(
+    searchParams.get("busStop") || "75009",
+  );
 
   const {
     data: busArrivalData,
@@ -24,7 +28,7 @@ export default function Home() {
     <main className="h-screen mx-auto p-4 lg:w-2xl">
       <Navbar />
 
-      <SearchBar onSearch={setBusStopCode} />
+      <SearchBar initialValue={busStopCode} />
 
       <div className="bus-arrival-timings">
         <div className="bg-white rounded-3xl shadow pb-5 ps-6 pe-8 pt-0 mt-5">
@@ -62,8 +66,8 @@ export default function Home() {
                   <div className="w-full ms-5">
                     {/* <div className="border-b border-b-grey pb-0.5">
                     <p className="text-xs text-grey">
-                      {getBusStopName(bus.NextBus.OriginCode)} →{" "}
-                      {getBusStopName(bus.NextBus.DestinationCode)}
+                      {useBusStopName(bus.NextBus.OriginCode)} →{" "}
+                      {useBusStopName(bus.NextBus.DestinationCode)}
                     </p>
                   </div> */}
 
