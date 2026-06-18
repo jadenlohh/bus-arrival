@@ -17,7 +17,7 @@ export default function Home() {
     error,
     isLoading,
     isValidating,
-    mutate,
+    mutate: refreshBusArrivalData,
   } = useSWR(`/api/getBusArrival?busStopCode=${busStopCode}`, fetcher);
 
   const { data: busStopInfo, isLoading: busStopInfoLoading } = useSWR(
@@ -33,13 +33,13 @@ export default function Home() {
 
       <SearchBar initialValue={busStopCode} onSearch={setBusStopCode} />
 
-      <div className="bus-arrival-timings bg-white shadow rounded-3xl mt-5">
+      <div className="bus-arrival-timings bg-white shadow rounded-3xl py-6 mt-5">
         <div>
-          {!busStopInfoLoading && (
-            <div className="flex items-center justify-between border-b border-b-[#E6E6E6] w-full px-6 py-5">
+          {!busStopInfoLoading && busStopInfo !== undefined && (
+            <div className="flex items-center border-b border-b-[#F1F1F1] justify-between w-full pb-5 px-6">
               <div>
                 <p className="font-semibold">{busStopInfo.name}</p>
-                <p className="text-xs text-grey pt-0.5">
+                <p className="text-xs text-grey">
                   {busStopCode} | {busStopInfo.roadName}
                 </p>
               </div>
@@ -51,7 +51,7 @@ export default function Home() {
                     : "cursor-pointer transition-transform rotate-360 duration-1000 p-2"
                 }
                 onClick={() => {
-                  mutate();
+                  refreshBusArrivalData();
                 }}
               >
                 <svg
@@ -85,7 +85,7 @@ export default function Home() {
           )}
         </div>
 
-        <div className="pb-5 ps-6 pe-8">
+        <div className="px-6 pe-8">
           {isLoading ? (
             <div className="my-auto w-full py-30">
               <div className="flex place-content-center w-full">
@@ -110,7 +110,7 @@ export default function Home() {
           ) : (
             busArrivalData.map((bus) => {
               return (
-                <div className="flex pt-6" key={bus.ServiceNo}>
+                <div className="flex py-3 first:pt-6" key={bus.ServiceNo}>
                   <div className="bus-number">
                     <div className="bg-red text-white rounded-lg text-center w-16 p-3">
                       <p>{bus.ServiceNo}</p>
@@ -118,12 +118,12 @@ export default function Home() {
                   </div>
 
                   <div className="w-full ms-5">
-                    {/* <div className="border-b border-b-grey pb-0.5">
-                    <p className="text-xs text-grey">
-                      {useBusStopName(bus.NextBus.OriginCode)} →{" "}
-                      {useBusStopName(bus.NextBus.DestinationCode)}
-                    </p>
-                  </div> */}
+                    <div className="border-b border-b-[#E6E6E6] pb-1">
+                      <RouteInfo
+                        originCode={bus.NextBus.OriginCode}
+                        destinationCode={bus.NextBus.DestinationCode}
+                      />
+                    </div>
 
                     <div className="flex flex-col justify-between w-full lg:flex-row lg:items-center lg:pt-3">
                       <NextArrivalTiming
@@ -200,5 +200,21 @@ export default function Home() {
 
       <Footer />
     </main>
+  );
+}
+
+function RouteInfo({ originCode, destinationCode }) {
+  const { data: origin } = useSWR(
+    `/api/getBusStopInfo?busStopCode=${originCode}`,
+    fetcher,
+  );
+  const { data: destination } = useSWR(
+    `/api/getBusStopInfo?busStopCode=${destinationCode}`,
+    fetcher,
+  );
+  return (
+    <p className="text-grey text-xs">
+      {origin?.name} → {destination?.name}
+    </p>
   );
 }
